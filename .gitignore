@@ -1,0 +1,17 @@
+# Credentials and SSH keys
+*.pem
+*.key
+*.ppk
+.env
+.env.*
+!.env.example
+
+# Sensitive configuration
+credentials.json
+secrets.json
+
+# Temporary files
+*.log
+*.tmp
+__pycache__/
+.vscode/
