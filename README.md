@@ -166,6 +166,40 @@ The vulnerable configuration intentionally permits a privilege transition inside
 
 The exercise demonstrates effective root privileges inside a container, not root access to the underlying EC2 host.
 
+## Testing Evidence
+
+The following screenshots document key stages of the assessment, including reconnaissance, exploitation, and remediation verification.
+
+### Network Reconnaissance — Nmap
+
+![Nmap Network Reconnaissance](screenshots/01-nmap-scan.png)
+
+Nmap was used to identify reachable services and assess network exposure of the AWS-hosted environment.
+
+### Automated Vulnerability Assessment — Nuclei
+
+![Nuclei Vulnerability Scan](screenshots/02-nuclei-scan.png)
+
+Nuclei was used to perform automated vulnerability scanning and identify areas for further manual investigation.
+
+### SQL Injection — Administrator Authentication Bypass
+
+![SQL Injection Authentication Bypass](screenshots/03-sql-injection.png)
+
+Burp Suite testing demonstrated successful administrator authentication bypass through SQL injection in the login endpoint.
+
+### Linux Privilege Escalation
+
+![Linux Privilege Escalation](screenshots/04-privilege-escalation.png)
+
+An insecure maintenance workflow enabled an unprivileged user to execute commands with effective root privileges inside an isolated Docker container.
+
+### Remediation Verification
+
+![Privilege Escalation Remediation](screenshots/05-remediation-verification.png)
+
+After correcting directory ownership and removing unnecessary SUID permissions, testing confirmed that the original privilege-escalation path was no longer exploitable.
+
 ## Project Documentation
 
 - [Vulnerability Assessment Findings](vulnerability-assessment/findings.md) — Technical findings, evidence, impact, and remediation recommendations.
