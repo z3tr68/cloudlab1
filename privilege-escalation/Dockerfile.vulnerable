@@ -1,0 +1,43 @@
+FROM ubuntu:24.04
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    sudo findutils procps passwd && \
+    useradd -m -s /bin/bash trainee && \
+    mkdir -p /opt/maintenance && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY maintenance.sh /opt/maintenance/maintenance.sh
+
+RUN chown root:root /opt/maintenance/maintenance.sh && \
+ chmod 755 /opt/maintenance/maintenance.sh && \
+    chown trainee:trainee /opt/maintenance
+
+USER trainee
+WORKDIR /home/trainee
+
+CMD ["/bin/bash"]
+FROM ubuntu:24.04
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    sudo findutils procps passwd gcc libc6-dev && \
+    useradd -m -s /bin/bash trainee && \
+    mkdir -p /opt/maintenance && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY maintenance.sh /opt/maintenance/maintenance.sh
+COPY maintenance-runner.c /tmp/maintenance-runner.c
+
+RUN gcc /tmp/maintenance-runner.c -o /usr/local/bin/maintenance-runner && \
+    chown root:root /usr/local/bin/maintenance-runner && \
+    chmod 4755 /usr/local/bin/maintenance-runner && \
+    chown root:root /opt/maintenance/maintenance.sh && \
+    chmod 755 /opt/maintenance/maintenance.sh && \
+    chown trainee:trainee /opt/maintenance && \
+    rm /tmp/maintenance-runner.c 
+
+USER trainee
+WORKDIR /home/trainee
+
+CMD ["/bin/bash"]
